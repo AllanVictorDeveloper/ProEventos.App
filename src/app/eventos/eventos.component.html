@@ -1,0 +1,80 @@
+<h2>Eventos</h2>
+
+
+<form action="" class="form-inline">
+  <div class="form-group mb-2">
+    <input type="text" class=" mr-200 " placeholder="buscar" />&nbsp;
+    <button class="btn btn-success btn-sm">Pesquisar</button>
+  </div>
+</form>
+
+<button
+  class="btn btn-warning btn-sm mb-2"
+  type="submit"
+  (click)="mostrarImg()"
+>
+  {{ mostrar ? "Ocultar Imagem" : "Exibir Imagem" }}
+</button>
+
+<br />
+<table class="table table-striped">
+  <thead class="table-dark text-center">
+    <tr>
+      <th *ngIf="mostrar" scope="col">Logo</th>
+      <th scope="col">#</th>
+      <th scope="col">Tema</th>
+      <th scope="col">Local</th>
+      <th scope="col">Data</th>
+      <th scope="col">Qtd Pessoa</th>
+      <th scope="col">Lote</th>
+      <th scope="col">Opções</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="eventos && eventos.length" class="text-center">
+    <tr *ngFor="let evento of eventos">
+      <td *ngIf="mostrar">
+        <img
+          src="/assets/{{ evento.imagemUrl }}"
+          [style.width.px]="tamanhoImagem"
+          [style.margin.px]="margemImagem"
+        />
+      </td>
+      <td>
+        <strong>{{ evento.eventoId }}</strong>
+      </td>
+      <td>
+        <strong>{{ evento.tema }}</strong>
+      </td>
+      <td>
+        <strong>{{ evento.local }}</strong>
+      </td>
+      <td>
+        <strong>{{ evento.dataEvento }}</strong>
+      </td>
+      <td>
+        <strong>{{ evento.qtdPessoas }}</strong>
+      </td>
+      <td>
+        <strong>{{ evento.lote }}</strong>
+      </td>
+      <td>
+        <button class="btn btn-primary btn-sm">Buscar</button>
+        <button class="btn btn-danger btn-sm">Excluir</button>
+      </td>
+    </tr>
+  </tbody>
+  <!-- <button class="btn btn-danger btn-sm" (click)="visualizarArquivo()">Abrir</button> -->
+  <button class="btn btn-success btn-sm" (click)="downArquivo()">Download</button>
+  <tfoot>
+    <tr>
+      <td colspan="8" class="text-center" *ngIf="!eventos.length">
+        <h4>Nenhum evento encontrado !</h4>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
+<div class="container">
+  <pdf-viewer [src]="pdfSrc"></pdf-viewer>
+
+</div>
