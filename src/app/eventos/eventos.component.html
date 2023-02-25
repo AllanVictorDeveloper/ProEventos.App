@@ -1,12 +1,13 @@
 <h2>Eventos</h2>
 
 
-<form action="" class="form-inline">
+<div action="" class="form-inline">
   <div class="form-group mb-2">
-    <input type="text" class=" mr-200 " placeholder="buscar" />&nbsp;
-    <button class="btn btn-success btn-sm">Pesquisar</button>
+    <label class="mr-2">Filtro: </label>&nbsp;
+    <input type="text" class=" mr-200 " placeholder="buscar" [(ngModel)]="filtroLista" />&nbsp;
+    <!-- <button class="btn btn-success btn-sm">Pesquisar</button> -->
   </div>
-</form>
+</div>
 
 <button
   class="btn btn-warning btn-sm mb-2"
@@ -31,12 +32,13 @@
     </tr>
   </thead>
   <tbody *ngIf="eventos && eventos.length" class="text-center">
-    <tr *ngFor="let evento of eventos">
+    <tr *ngFor="let evento of eventosFiltrados">
       <td *ngIf="mostrar">
         <img
           src="/assets/{{ evento.imagemUrl }}"
           [style.width.px]="tamanhoImagem"
           [style.margin.px]="margemImagem"
+
         />
       </td>
       <td>
@@ -58,13 +60,11 @@
         <strong>{{ evento.lote }}</strong>
       </td>
       <td>
-        <button class="btn btn-primary btn-sm">Buscar</button>
+        <button class="btn btn-primary btn-sm">Editar</button>&nbsp;
         <button class="btn btn-danger btn-sm">Excluir</button>
       </td>
     </tr>
   </tbody>
-  <!-- <button class="btn btn-danger btn-sm" (click)="visualizarArquivo()">Abrir</button> -->
-  <button class="btn btn-success btn-sm" (click)="downArquivo()">Download</button>
   <tfoot>
     <tr>
       <td colspan="8" class="text-center" *ngIf="!eventos.length">
@@ -74,7 +74,4 @@
   </tfoot>
 </table>
 
-<div class="container">
-  <pdf-viewer [src]="pdfSrc"></pdf-viewer>
 
-</div>

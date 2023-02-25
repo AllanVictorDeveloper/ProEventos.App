@@ -9,8 +9,8 @@ import {HttpClientModule} from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavComponent } from './nav/nav.component';
 import {CollapseModule} from 'ngx-bootstrap/collapse';
-import { EventoService } from './evento.service';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -28,8 +28,9 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     BrowserAnimationsModule,
     CollapseModule.forRoot(),
     PdfViewerModule,
+    FormsModule
   ],
-  providers: [EventoService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

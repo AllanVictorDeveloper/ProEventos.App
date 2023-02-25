@@ -1,95 +1,69 @@
-import { HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs';
-import { EventoService } from '../evento.service';
 
 @Component({
   selector: 'app-eventos',
   templateUrl: './eventos.component.html',
   template: '<pdf-viewer [src]="pdfSrc"></pdf-viewer>',
-  styleUrls: ['./eventos.component.css']
+  styleUrls: ['./eventos.component.css'],
 })
 export class EventosComponent implements OnInit {
-
   private url = 'https://localhost:44341/api/Eventos';
 
   public pdfSrc: any;
-  public eventos: any = [] ;
+  public eventos: any = [];
+  public eventosFiltrados: any = [];
 
   public mostrar = true;
-  public botao = "Esconder";
+  public botao = 'Esconder';
   public margemImagem: number = 2;
   public tamanhoImagem: number = 120;
+  private _filtroLista: string = '';
 
+  public get filtroLista(): string {
+    return this._filtroLista;
+  }
 
+  public set filtroLista(value: string) {
+    this._filtroLista = value;
+    this.eventosFiltrados = this.filtroLista
+      ? this.filtrarEventos(this.filtroLista)
+      : this.eventos;
+  }
 
-  constructor(private http: HttpClient ,private srv: EventoService) { }
+  filtrarEventos(filtrarPor: string): any {
+    filtrarPor = filtrarPor.toLocaleLowerCase();
+    return this.eventos.filter(
+      (evento: { tema: string; local: string }) =>
+        evento.tema.toLocaleLowerCase().indexOf(filtrarPor) != -1 ||
+        evento.local.toLocaleLowerCase().indexOf(filtrarPor) != -1
+    );
+  }
+
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-
-    // this.getEventos();
-    this.visualizarArquivo();
-
+    this.getEventos();
   }
 
   getEventos(): void {
-    this.http.get(`${this.url}/ListarEventos`).subscribe( (response) => {
-      console.log(response);
-      this.eventos = response;
-      (console.error());
-    });
-
+    this.http.get(`${this.url}/ListarEventos`).subscribe(
+      (response) => {
+        this.eventos = response;
+        this.eventosFiltrados = response;
+      },
+      (error) => console.log(error)
+    );
   }
 
-  mostrarImg(){
+  mostrarImg() {
     this.mostrar = !this.mostrar;
-    if(this.mostrar){
+    if (this.mostrar) {
       this.botao = 'Esconder';
+    } else {
+      this.botao = 'Mostrar';
     }
-    else{
-      this.botao = 'Mostrar'
-    }
-  }
-
-  visualizarArquivo(){
-    // this.srv.getArquivo().subscribe((res: Blob) =>{
-    //   let url = window.URL.createObjectURL(res);
-    //   window.open(url);
-    // });
-    this.srv.getArquivo().subscribe(res =>{
-      let blob: Blob = res as Blob;
-      let url = window.URL.createObjectURL(blob);
-      // window.open(url);
-      const fileReader = new FileReader();
-      fileReader.readAsArrayBuffer(blob);
-        fileReader.onload = (event: any) => {
-          this.pdfSrc = event.target.result;
-        };
-    });
-
-    // this.srv.getArquivo().pipe(
-    //   map((blob: Blob) => {
-    //     const fileReader = new FileReader();
-    //     fileReader.readAsArrayBuffer(blob);
-    //     fileReader.onload = (event: any) => {
-    //       this.pdfSrc = event.target.result;
-    //     };
-    //   })
-    // ).subscribe();
-
-
-  }
-
-  downArquivo(){
-    this.srv.dowArquivo().subscribe(res =>{
-      console.log(res);
-      let blob: Blob = res as Blob;
-      let url = window.URL.createObjectURL(blob);
-      let a=document.createElement('a');
-      a.download = '';
-      a.href= url;
-      a.click();
-    });
   }
 
 }
