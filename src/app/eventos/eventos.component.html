@@ -52,20 +52,21 @@
         <strong>{{ evento.local }}</strong>
       </td>
       <td>
-        <strong>{{ evento.dataEvento }}</strong>
+        <strong>{{ evento.dataEvento | DateTimeFormatPipe }}</strong>
       </td>
       <td>
         <strong>{{ evento.qtdPessoas }}</strong>
       </td>
       <td>
-        <strong>{{ evento.lotes[0].nome }}</strong>
+        <strong>{{ evento.lotes[0].nome | uppercase }}</strong>
       </td>
       <td>
-        <button class="btn btn-primary btn-sm">
+        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" title="Editar">
           <i class="fa fa-edit"></i>
           Editar
         </button>&nbsp;
-        <button class="btn btn-danger btn-sm">
+        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" title="Excluir"
+        (click)="openModal(template)">
           <i class="fa fa-trash"></i>
           Excluir
         </button>
@@ -80,5 +81,13 @@
     </tr>
   </tfoot>
 </table>
+
+<ng-template #template>
+  <div class="modal-body text-center">
+    <p>Tem certeza que quer deletar esse Evento ?</p>
+    <button type="button" class="btn btn-default" (click)="confirm()" >Sim</button>
+    <button type="button" class="btn btn-primary" (click)="decline()" >Não</button>
+  </div>
+</ng-template>
 
 

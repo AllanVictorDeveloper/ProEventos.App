@@ -1,17 +1,26 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
+
+import {CollapseModule} from 'ngx-bootstrap/collapse';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ModalModule } from 'ngx-bootstrap/modal';
+
+import { ToastrModule } from 'ngx-toastr';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EventosComponent } from './eventos/eventos.component';
 import { PalestrantesComponent } from './palestrantes/palestrantes.component';
-import {HttpClientModule} from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavComponent } from './nav/nav.component';
-import {CollapseModule} from 'ngx-bootstrap/collapse';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { FormsModule } from '@angular/forms';
+
 import { EventoService } from './services/evento.service';
+import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
 
 
 @NgModule({
@@ -20,6 +29,7 @@ import { EventoService } from './services/evento.service';
     EventosComponent,
     PalestrantesComponent,
     NavComponent,
+    DateTimeFormatPipe
    ],
 
   imports: [
@@ -27,11 +37,22 @@ import { EventoService } from './services/evento.service';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    CollapseModule.forRoot(),
     PdfViewerModule,
-    FormsModule
+    FormsModule,
+    CollapseModule.forRoot(),
+    TooltipModule.forRoot(),
+    BsDropdownModule.forRoot(),
+    ModalModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut: 4000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+      progressBar: true
+    }),
+    NgxSpinnerModule.forRoot()
   ],
   providers: [EventoService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule { }
