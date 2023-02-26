@@ -14,6 +14,7 @@
   type="submit"
   (click)="mostrarImg()"
 >
+<i class="{{ mostrar ? 'fa fa-eye-slash' : 'fa fa-eye' }}"></i>
   {{ mostrar ? "Ocultar Imagem" : "Exibir Imagem" }}
 </button>
 
@@ -42,7 +43,7 @@
         />
       </td>
       <td>
-        <strong>{{ evento.eventoId }}</strong>
+        <strong>{{ evento.id }}</strong>
       </td>
       <td>
         <strong>{{ evento.tema }}</strong>
@@ -57,11 +58,17 @@
         <strong>{{ evento.qtdPessoas }}</strong>
       </td>
       <td>
-        <strong>{{ evento.lote }}</strong>
+        <strong>{{ evento.lotes[0].nome }}</strong>
       </td>
       <td>
-        <button class="btn btn-primary btn-sm">Editar</button>&nbsp;
-        <button class="btn btn-danger btn-sm">Excluir</button>
+        <button class="btn btn-primary btn-sm">
+          <i class="fa fa-edit"></i>
+          Editar
+        </button>&nbsp;
+        <button class="btn btn-danger btn-sm">
+          <i class="fa fa-trash"></i>
+          Excluir
+        </button>
       </td>
     </tr>
   </tbody>

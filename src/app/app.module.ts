@@ -11,6 +11,7 @@ import { NavComponent } from './nav/nav.component';
 import {CollapseModule} from 'ngx-bootstrap/collapse';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { FormsModule } from '@angular/forms';
+import { EventoService } from './services/evento.service';
 
 
 @NgModule({
@@ -30,7 +31,7 @@ import { FormsModule } from '@angular/forms';
     PdfViewerModule,
     FormsModule
   ],
-  providers: [],
+  providers: [EventoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

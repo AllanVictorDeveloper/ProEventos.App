@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs';
+import { Evento } from '../models/Evento';
+import { EventoService } from '../services/evento.service';
 
 @Component({
   selector: 'app-eventos',
@@ -9,11 +9,9 @@ import { map } from 'rxjs';
   styleUrls: ['./eventos.component.css'],
 })
 export class EventosComponent implements OnInit {
-  private url = 'https://localhost:44341/api/Eventos';
-
   public pdfSrc: any;
-  public eventos: any = [];
-  public eventosFiltrados: any = [];
+  public eventos: Evento[] = [];
+  public eventosFiltrados: Evento[] = [];
 
   public mostrar = true;
   public botao = 'Esconder';
@@ -32,32 +30,15 @@ export class EventosComponent implements OnInit {
       : this.eventos;
   }
 
-  filtrarEventos(filtrarPor: string): any {
-    filtrarPor = filtrarPor.toLocaleLowerCase();
-    return this.eventos.filter(
-      (evento: { tema: string; local: string }) =>
-        evento.tema.toLocaleLowerCase().indexOf(filtrarPor) != -1 ||
-        evento.local.toLocaleLowerCase().indexOf(filtrarPor) != -1
-    );
-  }
-
-  constructor(private http: HttpClient) {}
+  constructor(private eventosrv: EventoService) {}
 
   ngOnInit(): void {
     this.getEventos();
+    this.getEventoPorId(1);
+    this.getEventoPorTema('angular');
   }
 
-  getEventos(): void {
-    this.http.get(`${this.url}/ListarEventos`).subscribe(
-      (response) => {
-        this.eventos = response;
-        this.eventosFiltrados = response;
-      },
-      (error) => console.log(error)
-    );
-  }
-
-  mostrarImg() {
+  public mostrarImg(): void {
     this.mostrar = !this.mostrar;
     if (this.mostrar) {
       this.botao = 'Esconder';
@@ -66,4 +47,48 @@ export class EventosComponent implements OnInit {
     }
   }
 
+  public filtrarEventos(filtrarPor: string): Evento[] {
+    filtrarPor = filtrarPor.toLocaleLowerCase();
+    return this.eventos.filter(
+      (evento: { tema: string; local: string }) =>
+        evento.tema.toLocaleLowerCase().indexOf(filtrarPor) != -1 ||
+        evento.local.toLocaleLowerCase().indexOf(filtrarPor) != -1
+    );
+  }
+
+  public getEventos(): any {
+    this.eventosrv.listarEventos().subscribe({
+      next: (response) => {
+        (this.eventos = response), (this.eventosFiltrados = this.eventos);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {},
+    });
+  }
+
+  public getEventoPorTema(tema: string): any {
+    this.eventosrv.listarEventoByTema(tema).subscribe({
+      next: (response) => {
+        //console.log(response);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {},
+    });
+  }
+
+  public getEventoPorId(id: number): any {
+    this.eventosrv.listarEventoById(id).subscribe({
+      next: (response) => {
+        // console.log(response);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {},
+    });
+  }
 }
