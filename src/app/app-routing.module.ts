@@ -6,9 +6,23 @@ import { EventosDetalheComponent } from './components/eventos/eventos-detalhe/ev
 import { EventosListaComponent } from './components/eventos/eventos-lista/eventos-lista.component';
 import { EventosComponent } from './components/eventos/eventos.component';
 import { PalestrantesComponent } from './components/palestrantes/palestrantes.component';
-import { PerfilComponent } from './components/perfil/perfil.component';
+import { PerfilComponent } from './components/user/perfil/perfil.component';
+import { LoginComponent } from './components/user/login/login.component';
+import { RegistrationComponent } from './components/user/registration/registration.component';
+import { UserComponent } from './components/user/user.component';
 
 const routes: Routes = [
+  {path:'user', redirectTo:'user/login'},
+  {path: 'user', component: UserComponent,
+    children: [
+      {path: 'login', component: LoginComponent},
+      {path: 'registrar', component: RegistrationComponent},
+
+    ]
+  },
+
+  { path: 'user/perfil', component: PerfilComponent },
+
   { path: 'eventos', redirectTo: 'eventos/lista' },
   {
     path: 'eventos',
@@ -20,7 +34,6 @@ const routes: Routes = [
     ],
   },
   { path: 'palestrantes', component: PalestrantesComponent },
-  { path: 'perfil', component: PerfilComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'contatos', component: ContatosComponent },
   { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
