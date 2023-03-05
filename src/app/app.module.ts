@@ -25,6 +25,8 @@ import { TituloComponent } from './shared/titulo/titulo.component';
 import { ContatosComponent } from './components/contatos/contatos.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
+import { EventosDetalheComponent } from './components/eventos/eventos-detalhe/eventos-detalhe.component';
+import { EventosListaComponent } from './components/eventos/eventos-lista/eventos-lista.component';
 
 
 @NgModule({
@@ -37,7 +39,9 @@ import { PerfilComponent } from './components/perfil/perfil.component';
     PerfilComponent,
     NavComponent,
     TituloComponent,
-    DateTimeFormatPipe
+    DateTimeFormatPipe,
+    EventosDetalheComponent,
+    EventosListaComponent
    ],
 
   imports: [
