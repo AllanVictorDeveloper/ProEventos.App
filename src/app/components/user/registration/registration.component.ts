@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControlOptions, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ValidatorField } from '@app/helpers/ValidatorField';
 
 @Component({
   selector: 'app-registration',
@@ -21,6 +22,11 @@ export class RegistrationComponent implements OnInit {
   }
 
   private validator(): void {
+
+    const formOptions: AbstractControlOptions = {
+      validators: ValidatorField.MustMath('senha', 'confirmeSenha')
+    };
+
     this.form = this.fb.group({
       primeiroNome: ['', Validators.required],
       ultimoNome: ['', Validators.required],
@@ -28,7 +34,7 @@ export class RegistrationComponent implements OnInit {
       usuario: ['', Validators.required],
       senha: ['', [Validators.required, Validators.minLength(6)]],
       confirmeSenha: ['', Validators.required],
-    })
+    }, formOptions);
   }
 
 }
