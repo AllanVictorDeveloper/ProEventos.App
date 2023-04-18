@@ -8,6 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class EventosDetalheComponent implements OnInit {
   form!: FormGroup;
+  bsValue = new Date();
 
   get f(): any{
     return this.form.controls;

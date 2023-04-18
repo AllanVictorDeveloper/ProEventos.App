@@ -83,7 +83,9 @@ export class EventosListaComponent {
   public getEventos(): any {
     this.eventosrv.listarEventos().subscribe({
       next: (response) => {
+
         (this.eventos = response), (this.eventosFiltrados = this.eventos);
+        console.log(this.eventosFiltrados)
       },
       error: (error) => {
         this.spinner.hide();
@@ -110,7 +112,7 @@ export class EventosListaComponent {
   public getEventoPorId(id: number): any {
     this.eventosrv.listarEventoById(id).subscribe({
       next: (response) => {
-        // console.log(response);
+        //console.log(response);
       },
       error: (error) => {
         console.log(error);

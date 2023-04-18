@@ -30,6 +30,7 @@ import { EventosListaComponent } from './components/eventos/eventos-lista/evento
 import { UserComponent } from './components/user/user.component';
 import { LoginComponent } from './components/user/login/login.component';
 import { RegistrationComponent } from './components/user/registration/registration.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 
 @NgModule({
@@ -68,7 +69,8 @@ import { RegistrationComponent } from './components/user/registration/registrati
       preventDuplicates: true,
       progressBar: true
     }),
-    NgxSpinnerModule.forRoot()
+    NgxSpinnerModule.forRoot(),
+    BsDatepickerModule.forRoot()
   ],
   providers: [EventoService],
   bootstrap: [AppComponent],
