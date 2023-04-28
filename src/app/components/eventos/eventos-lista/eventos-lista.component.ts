@@ -17,6 +17,8 @@ export class EventosListaComponent {
   public eventos: Evento[] = [];
   public eventosFiltrados: Evento[] = [];
 
+  public eventoId: number = 0;
+
   public mostrar = true;
   public botao = 'Esconder';
   public margemImagem: number = 2;
@@ -44,19 +46,42 @@ export class EventosListaComponent {
 
   ngOnInit(): void {
     this.spinner.show();
-    this.getEventos();
-    this.getEventoPorId(1);
-    this.getEventoPorTema('angular');
+    this.carregarEventos();
+    //this.carregarEventoPorId(1);
+    //this.getEventoPorTema('angular');
   }
 
-  openModal(event: any,template: TemplateRef<any>): void {
+  openModal(event: any,template: TemplateRef<any>, eventoId: number): void {
     event.stopPropagation();
+    this.eventoId = eventoId;
     this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
   confirm(): void {
     this.modalRef?.hide();
-    this.toastr.success('O Evento foi deletado com sucesso', 'Deletado!');
+    this.spinner.show();
+    this.eventosrv.deleteEvento(this.eventoId).subscribe({
+      next:(res) => {
+        console.log(res)
+        if(res.value.status == 200){
+          this.toastr.success(`${res.value.mensagem}`, 'Deletado!');
+          this.spinner.hide();
+          this.carregarEventos();
+        }
+        window.location.reload();
+      },
+      error:(err) => {
+        console.error(err);
+        this.toastr.error(`${err.value.mensage}`, 'ERRO!');
+        this.spinner.hide();
+      },
+      complete:()=> {
+        this.spinner.hide();
+      }
+    });
+
+
+
   }
 
   decline(): void {
@@ -81,12 +106,11 @@ export class EventosListaComponent {
     );
   }
 
-  public getEventos(): any {
+  public carregarEventos(): any {
     this.eventosrv.listarEventos().subscribe({
-      next: (response) => {
+      next: (response: Evento[]) => {
 
         (this.eventos = response), (this.eventosFiltrados = this.eventos);
-        console.log(this.eventosFiltrados)
       },
       error: (error) => {
         this.spinner.hide();
@@ -110,7 +134,7 @@ export class EventosListaComponent {
     });
   }
 
-  public getEventoPorId(id: number): any {
+  public carregarEventoPorId(id: number): any {
     this.eventosrv.listarEventoById(id).subscribe({
       next: (response) => {
         //console.log(response);

@@ -44,7 +44,7 @@
           <th scope="col">#</th>
           <th scope="col">Tema</th>
           <th scope="col">Local</th>
-          <th scope="col">Data</th>
+          <th scope="col">Data/Hora</th>
           <th class="d-none d-md-table-cell" scope="col">Qtd Pessoa</th>
           <th class="d-none d-md-table-cell" scope="col">Lote</th>
           <th scope="col">Opções</th>
@@ -69,7 +69,7 @@
             <strong>{{ evento.local }}</strong>
           </td>
           <td>
-            <strong>{{ evento.dataEvento | DateTimeFormatPipe }}</strong>
+            <strong>{{ evento.dataEvento | date: 'dd/MM/yyyy - hh:mm' }}</strong>
           </td>
           <td class="d-none d-md-table-cell">
             <strong>{{ evento.qtdPessoas }}</strong>
@@ -83,7 +83,7 @@
               class="btn btn-danger btn-sm"
               data-bs-toggle="tooltip"
               title="Excluir"
-              (click)="openModal($event, template)"
+              (click)="openModal($event, template, evento.id)"
             >
               <i class="fa fa-trash"></i>
             </button>
