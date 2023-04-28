@@ -49,7 +49,8 @@ export class EventosListaComponent {
     this.getEventoPorTema('angular');
   }
 
-  openModal(template: TemplateRef<any>): void {
+  openModal(event: any,template: TemplateRef<any>): void {
+    event.stopPropagation();
     this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
