@@ -47,7 +47,7 @@
             [bsConfig]="{
               isAnimated: true,
               adaptivePosition: true,
-              dateInputFormat: 'DD/MM/YYYY, h:mm a' }"
+              dateInputFormat: 'DD/MM/YYYY hh:mm:ss a' }"
 
           />
           <div *ngIf="f.dataEvento.errors?.required" class="invalid-feedback">
@@ -113,11 +113,11 @@
     </div>
     <div class="card-footer">
       <div class="d-flex">
-        <button class="btn btn-outline-secondary mr-auto border">
+        <button class="btn btn-outline-secondary mr-auto border" (click)="voltar()">
           Cancelar Alteração
         </button>
         <div class="d-flex ms-auto">
-          <button class="btn btn-success">
+          <button class="btn btn-success" (click)="atualizarEvento()">
             <span class=""></span>
             Salvar Evento
           </button>

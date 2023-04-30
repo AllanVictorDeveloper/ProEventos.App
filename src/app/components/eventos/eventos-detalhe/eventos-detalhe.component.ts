@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Evento } from '@app/models/Evento';
 import { EventoService } from '@app/services/evento.service';
 import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
@@ -17,6 +17,8 @@ export class EventosDetalheComponent implements OnInit {
 
   evento!: Evento;
 
+  eventoIdParam!: any;
+
   get f(): any {
     return this.form.controls;
   }
@@ -25,8 +27,11 @@ export class EventosDetalheComponent implements OnInit {
     private route: ActivatedRoute,
     private eventoService: EventoService,
     private spinner: NgxSpinnerService,
-    private toastr: ToastrService
-  ) {}
+    private toastr: ToastrService,
+    private routerLink: Router
+  ) {
+    this.eventoIdParam = this.route.snapshot.paramMap.get('id');
+  }
 
   ngOnInit(): void {
     this.validator();
@@ -46,26 +51,59 @@ export class EventosDetalheComponent implements OnInit {
   }
 
   public carregarEvento(): void {
-    const eventoIdParam = this.route.snapshot.paramMap.get('id');
-
-    if (eventoIdParam !== null) {
+    if (this.eventoIdParam !== null) {
       this.spinner.show();
-      this.eventoService.listarEventoById(+eventoIdParam).subscribe({
+      this.eventoService.listarEventoById(+this.eventoIdParam).subscribe({
         next: (res: Evento) => {
           if (res) {
-            this.evento = {...res};
+            this.evento = { ...res };
             this.form.patchValue(this.evento);
           }
         },
         error: (err) => {
           this.spinner.hide();
           console.error(err);
-          this.toastr.error('Erro ao carregar o evento.', 'Erro!')
+          this.toastr.error('Erro ao carregar o evento.', 'Erro!');
         },
         complete: () => {
           this.spinner.hide();
         },
       });
     }
+  }
+
+  public atualizarEvento(): void {
+    this.spinner.show();
+    if (this.form.valid) {
+      this.evento = { ...this.form.value };
+
+      console.log(this.evento);
+      this.eventoService.atualizar(this.eventoIdParam, this.evento).subscribe({
+        next: (res) => {
+          if (res.status == 200) {
+            this.toastr.success(`${res.mensagem}`, 'Atualizado!');
+            this.spinner.hide();
+
+            // setTimeout(()=>{
+            //  window.location.reload();
+            // }, 3999);
+          }
+        },
+        error: (res) => {
+          console.error(res);
+          if (res.status == 400) {
+            this.toastr.error(`${res.error.mensagem}`, 'ERRO!');
+            this.spinner.hide();
+          }
+        },
+        complete: () => {
+          this.spinner.hide();
+        },
+      });
+    }
+  }
+
+  voltar(): void{
+    this.routerLink.navigate(['eventos/lista'])
   }
 }

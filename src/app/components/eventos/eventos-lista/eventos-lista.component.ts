@@ -51,7 +51,7 @@ export class EventosListaComponent {
     //this.getEventoPorTema('angular');
   }
 
-  openModal(event: any,template: TemplateRef<any>, eventoId: number): void {
+  openModal(event: any, template: TemplateRef<any>, eventoId: number): void {
     event.stopPropagation();
     this.eventoId = eventoId;
     this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
@@ -60,28 +60,26 @@ export class EventosListaComponent {
   confirm(): void {
     this.modalRef?.hide();
     this.spinner.show();
-    this.eventosrv.deleteEvento(this.eventoId).subscribe({
-      next:(res) => {
-        console.log(res)
-        if(res.value.status == 200){
-          this.toastr.success(`${res.value.mensagem}`, 'Deletado!');
+    this.eventosrv.deletar(this.eventoId).subscribe({
+      next: (res) => {
+        console.log(res);
+        if (res.status == 200) {
+          this.toastr.success(`${res.mensagem}`, 'Deletado!');
           this.spinner.hide();
           this.carregarEventos();
         }
-        window.location.reload();
       },
-      error:(err) => {
-        console.error(err);
-        this.toastr.error(`${err.value.mensage}`, 'ERRO!');
+      error: (res) => {
+        console.error(res);
+        if (res.status == 400) {
+          this.toastr.error(`${res.error.mensagem}`, 'ERRO!');
+          this.spinner.hide();
+        }
+      },
+      complete: () => {
         this.spinner.hide();
       },
-      complete:()=> {
-        this.spinner.hide();
-      }
     });
-
-
-
   }
 
   decline(): void {
@@ -109,7 +107,6 @@ export class EventosListaComponent {
   public carregarEventos(): any {
     this.eventosrv.listarEventos().subscribe({
       next: (response: Evento[]) => {
-
         (this.eventos = response), (this.eventosFiltrados = this.eventos);
       },
       error: (error) => {
