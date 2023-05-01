@@ -74,36 +74,70 @@ export class EventosDetalheComponent implements OnInit {
 
   public atualizarEvento(): void {
     this.spinner.show();
+    debugger;
     if (this.form.valid) {
+      console.log(this.form);
       this.evento = { ...this.form.value };
-
-      console.log(this.evento);
-      this.eventoService.atualizar(this.eventoIdParam, this.evento).subscribe({
-        next: (res) => {
-          if (res.status == 200) {
-            this.toastr.success(`${res.mensagem}`, 'Atualizado!');
+      if (this.eventoIdParam !== null) {
+        this.eventoService.atualizar(this.eventoIdParam, this.evento).subscribe({
+            next: (res) => {
+              if (res.status == 200) {
+                this.toastr.success(`${res.mensagem}`, 'Atualizado!');
+                this.spinner.hide();
+                setTimeout(()=>{
+                 window.location.reload();
+                }, 4000);
+              }
+            },
+            error: (res) => {
+              console.error(res);
+              if (res.status == 400) {
+                this.toastr.error(`${res.error.mensagem}`, 'ERRO!');
+                this.spinner.hide();
+              }
+              else{
+                this.toastr.error(`${res.error.value}`, 'ERRO2!');
+              }
+            },
+            complete: () => {
+              this.spinner.hide();
+            },
+          }).add();
+      }
+      else {
+        this.evento = { ...this.form.value };
+        console.log(this.evento)
+        this.eventoService.adicionar(this.evento).subscribe({
+          next: (res) => {
+            if (res.status == 200) {
+              this.toastr.success(`${res.mensagem}`, 'Adicionado!');
+              this.spinner.hide();
+              setTimeout(()=>{
+                this.routerLink.navigate(['eventos/lista']);
+               }, 4000);
+            }
+          },
+          error: (res) => {
+            console.error(res);
+            if (res.status == 400) {
+              this.toastr.error(`${res.error.mensagem}`, 'ERRO!');
+              this.spinner.hide();
+            }
+          },
+          complete: () => {
             this.spinner.hide();
-
-            // setTimeout(()=>{
-            //  window.location.reload();
-            // }, 3999);
-          }
-        },
-        error: (res) => {
-          console.error(res);
-          if (res.status == 400) {
-            this.toastr.error(`${res.error.mensagem}`, 'ERRO!');
-            this.spinner.hide();
-          }
-        },
-        complete: () => {
-          this.spinner.hide();
-        },
-      });
+          },
+        });
+      }
+    }
+    else{
+      this.toastr.error('Preencha o formulário corretamente.', 'ERRO!');
+      this.spinner.hide();
+      console.log(this.form);
     }
   }
 
-  voltar(): void{
-    this.routerLink.navigate(['eventos/lista'])
+  voltar(): void {
+    this.routerLink.navigate(['eventos/lista']);
   }
 }
