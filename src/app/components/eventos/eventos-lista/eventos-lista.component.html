@@ -69,13 +69,13 @@
             <strong>{{ evento.local }}</strong>
           </td>
           <td>
-            <strong>{{ evento.dataEvento | DateTimeFormatPipe }}</strong>
+            <strong>{{ evento.dataEvento | date: "dd/MM/YYYY" }}</strong>
           </td>
           <td class="d-none d-md-table-cell">
             <strong>{{ evento.qtdPessoas }}</strong>
           </td>
           <td class="d-none d-md-table-cell">
-            <strong>{{ evento.lotes[0]?.nome| uppercase }}</strong>
+            <strong>{{ evento.lotes[0]?.nome | uppercase }}</strong>
           </td>
           <td>
             <button

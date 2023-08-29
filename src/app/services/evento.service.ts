@@ -30,7 +30,7 @@ export class EventoService {
       .pipe(map(response => response));
   }
 
-  public adicionar(evento: Evento): Observable<any>{
+  public adicionar(evento: Evento): Observable<Evento>{
     return this.http
       .post<Evento>(`${this.baseURL}/AdicionarEvento`, evento)
       .pipe(map(response => response));
