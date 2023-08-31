@@ -6,7 +6,7 @@ import { Observable, map } from 'rxjs';
 @Injectable()
 export class LoteService {
 
-  private baseURL = 'https://localhost:44341/api/lotes'
+  private baseURL = 'http://localhost:57644/api/lotes'
 
   constructor(private http: HttpClient) {}
 
@@ -29,7 +29,7 @@ export class LoteService {
 
   public Remove(eventoId: number, loteId: number): Observable<any>{
     return this.http
-      .delete<any>(`${this.baseURL}/DeletarLote/${eventoId}/${loteId}`)
+      .delete<any>(`${this.baseURL}/deletarLote/${eventoId}/${loteId}`)
       .pipe(map((response) => response));
   }
 

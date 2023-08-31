@@ -21,3 +21,7 @@
   --default-height: 25px;
   top: var(--default-height);
   }
+  .modal-excluir{
+  height: 40em;
+  width: 50em;
+}

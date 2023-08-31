@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -16,6 +16,9 @@ import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { DatePipe } from '@angular/common';
 import { DateTimeFormatPipe } from '@app/helpers/DateTimeFormat.pipe';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+
+
 
 @Component({
   selector: 'app-eventos-detalhe',
@@ -26,11 +29,14 @@ import { DateTimeFormatPipe } from '@app/helpers/DateTimeFormat.pipe';
 export class EventosDetalheComponent implements OnInit {
   form!: FormGroup;
   bsValue = new Date();
+  modalRef?: BsModalRef;
+  loteAtual = { id: 0 , nome: '', indice: 0 }
 
   evento!: Evento;
 
   eventoIdParam: number;
   estadoSalvar = 'post';
+
 
   get f(): any {
     return this.form.controls;
@@ -53,6 +59,15 @@ export class EventosDetalheComponent implements OnInit {
     };
   }
 
+  get bsConfigLote(): any {
+    return {
+      adaptivePosition: true,
+      dateInputFormat: 'DD/MM/YYYY',
+      containerClass: 'theme-default',
+      showWeekNumbers: false,
+    };
+  }
+
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
@@ -61,7 +76,7 @@ export class EventosDetalheComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
     private route: Router,
-    private datePipe: DatePipe
+    private modalService: BsModalService
   ) {
     this.eventoIdParam = +this.activatedRoute.snapshot.paramMap.get('id');
 
@@ -69,12 +84,7 @@ export class EventosDetalheComponent implements OnInit {
 
   ngOnInit(): void {
     this.validator();
-    debugger
-    if(this.eventoIdParam !== 0){
-      this.carregarEvento();
-
-    }
-
+    this.carregarEvento();
   }
 
   validator(): void {
@@ -105,12 +115,16 @@ export class EventosDetalheComponent implements OnInit {
     });
   }
 
+  public mudarValorData(value: Date, indice: number, campo: string): void {
+    this.lotes.value[indice][campo] = value
+  }
+
   public cssValidator(campoForm: FormControl | AbstractControl): any {
     return { 'is-invalid': campoForm.errors && campoForm.touched };
   }
 
   public carregarEvento(): void {
-    if (this.eventoIdParam !== null || this.eventoIdParam == 0) {
+    if (this.eventoIdParam !== null && this.eventoIdParam !== 0) {
       this.spinner.show();
 
       this.estadoSalvar = 'put';
@@ -139,34 +153,18 @@ export class EventosDetalheComponent implements OnInit {
     }
   }
 
-  // public carregarLotes(): void {
-  //   this.loteService.listarLoteByEventoId(this.eventoIdParam).subscribe({
-  //     next: (lotesRetorno: Lote[]) => {
-  //       lotesRetorno.forEach(item => {
-  //         this.lotes.push(this.criarLote(item))
-  //       })
-  //     },
-  //     error: (err) => {
-  //       this.spinner.hide();
-  //       this.toastr.error('Erro ao carregar os lotes.', 'Error!');
-  //       console.error(err);
-  //     },
-  //     complete: () => {}
-  //   });
-  // }
-
   public salvarEvento(): void {
     this.spinner.show();
-    debugger;
     if (this.form.valid) {
       console.log(this.form);
+      debugger
+      this.estadoSalvar == "put"
+        ? this.evento = this.form.value
+        : { id: this.form.value };
 
-      this.estadoSalvar === 'post'
-        ? { ...this.form.value }
-        : { id: this.evento.id, ...this.form.value };
-
-      if (this.eventoIdParam !== null) {
-        this.eventoService.atualizar[this.estadoSalvar](this.evento)
+      if (this.eventoIdParam > 0) {
+        debugger
+        this.eventoService.atualizar(this.eventoIdParam, this.evento)
           .subscribe({
             next: (res) => {
               if (res.status == 200) {
@@ -243,7 +241,44 @@ export class EventosDetalheComponent implements OnInit {
     }
   }
 
+
+  public removerLote(template: TemplateRef<any>, indice: number): void {
+
+    this.loteAtual.id = this.lotes.get(indice + '.id').value
+    this.loteAtual.nome = this.lotes.get(indice + '.nome').value
+    this.loteAtual.indice = indice
+
+    this.modalRef = this.modalService.show(template, {class: 'modal-excluir'})
+
+  }
+
+  public confirmDeleteLote(): void {
+    this.modalRef.hide();
+    this.spinner.show();
+
+    this.loteService.Remove(this.eventoIdParam, this.loteAtual.id).subscribe({
+      next: () => {
+        this.toastr.success(`Lote excluido com Sucesso`, 'Sucesso!')
+        this.lotes.removeAt(this.loteAtual.indice)
+      },
+
+      error: (err) => {
+        this.toastr.error(`Erro ao tentar deletar o Lote ${this.loteAtual.id}`, 'ERROR!')
+        console.error(err);
+      }
+
+    }).add(() => {this.spinner.hide()})
+  }
+
+  public declineDeleteLote(): void {
+    this.modalRef.hide();
+  }
+
   voltar(): void {
     this.route.navigate(['eventos/lista']);
+  }
+
+  public retornaTituloLote(nome: string): any{
+    return nome === null || nome === '' ? 'Nome do lote' : nome;
   }
 }

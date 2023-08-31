@@ -8,7 +8,7 @@ import { Evento } from '../models/Evento';
 )
 export class EventoService {
 
-  private baseURL = 'https://localhost:44341/api/Eventos'
+  private baseURL = 'http://localhost:57644/api/Eventos'
 
   constructor(private http: HttpClient) {}
 
@@ -37,6 +37,7 @@ export class EventoService {
   }
 
   public atualizar(id: number, evento: Evento): Observable<any>{
+  debugger
     return this.http
       .post<Evento>(`${this.baseURL}/AtualizarEvento/${id}`, evento)
       .pipe(map(response => response));

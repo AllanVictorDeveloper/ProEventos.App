@@ -19,6 +19,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavComponent } from './shared/nav/nav.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 
+
 import { EventoService } from './services/evento.service';
 import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
 import { TituloComponent } from './shared/titulo/titulo.component';
@@ -32,6 +33,7 @@ import { LoginComponent } from './components/user/login/login.component';
 import { RegistrationComponent } from './components/user/registration/registration.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { LoteService } from './services/lote.service';
+import { CurrencyMaskModule } from "ng2-currency-mask";
 
 
 @NgModule({
@@ -71,7 +73,9 @@ import { LoteService } from './services/lote.service';
       progressBar: true
     }),
     NgxSpinnerModule.forRoot(),
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    CurrencyMaskModule
+
   ],
   providers: [EventoService, LoteService],
   bootstrap: [AppComponent],
