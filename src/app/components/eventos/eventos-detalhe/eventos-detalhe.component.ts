@@ -64,11 +64,16 @@ export class EventosDetalheComponent implements OnInit {
     private datePipe: DatePipe
   ) {
     this.eventoIdParam = +this.activatedRoute.snapshot.paramMap.get('id');
+
   }
 
   ngOnInit(): void {
     this.validator();
-    this.carregarEvento();
+    debugger
+    if(this.eventoIdParam !== 0){
+      this.carregarEvento();
+
+    }
 
   }
 
