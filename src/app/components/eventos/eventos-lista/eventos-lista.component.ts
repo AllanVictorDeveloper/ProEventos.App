@@ -1,5 +1,6 @@
 import { Component, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '@enviroments/environment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -108,6 +109,7 @@ export class EventosListaComponent {
     this.eventosrv.listarEventos().subscribe({
       next: (response: Evento[]) => {
         (this.eventos = response), (this.eventosFiltrados = this.eventos);
+
       },
       error: (error) => {
         this.spinner.hide();
@@ -146,4 +148,11 @@ export class EventosListaComponent {
   detalheEvento(id: number): void {
     this.router.navigate([`/eventos/detalhe/${id}`]);
   }
+
+
+  public listarImagem(imagemUrl: string): any {
+
+    return imagemUrl !== '' ? `${environment.apiURL}/resources/images/${imagemUrl}`: 'assets/img/semImagem.png'
+  }
+
 }
